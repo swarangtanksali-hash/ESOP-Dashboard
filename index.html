@@ -1,306 +1,582 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ESOP Exit Calculator · Snaptrude</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: #080c14; }
-    input[type=range] { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: #1c2535; outline: none; }
-    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-    input[type=number] { -moz-appearance: textfield; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESOP Exit Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070709;
+    --panel: #0f0f14;
+    --panel2: #15151d;
+    --line: #1e1e2e;
+    --cyan: #00e5ff;
+    --green: #00ff9d;
+    --red: #ff4466;
+    --yellow: #ffd000;
+    --muted: #4a4a6a;
+    --text: #d0d0e8;
+    --white: #f0f0ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 64px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    padding: 28px 0 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+
+  .header-tag {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .header h1 span { color: var(--cyan); }
+
+  .header-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Section ── */
+  .section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── Input rows ── */
+  .input-row {
+    margin-bottom: 14px;
+  }
+
+  .input-row label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .input-row input[type="number"] {
+    width: 100%;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    color: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+
+  .input-row input::-webkit-outer-spin-button,
+  .input-row input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .input-row input:focus { border-color: var(--cyan); }
+
+  /* Computed display */
+  .computed-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+
+  .computed-row .c-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .computed-row .c-val {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .computed-row .c-val.dim { color: var(--muted); font-weight: 400; font-size: 12px; }
+  .computed-row .c-val.cyan { color: var(--cyan); }
+  .computed-row .c-val.yellow { color: var(--yellow); }
+  .computed-row .c-val.red-col { color: var(--red); }
+
+  /* ── Slider ── */
+  .slider-section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+
+  .slider-header .s-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .slider-header .s-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .slider-track {
+    position: relative;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 3px;
+    background: var(--line);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    background: var(--cyan);
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    border-radius: 50%;
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Result cards ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+  }
+
+  .card.full { grid-column: 1 / -1; }
+
+  .card .card-label {
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .card .card-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.65rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .card .card-val.cyan { color: var(--cyan); }
+  .card .card-val.green { color: var(--green); }
+  .card .card-val.red { color: var(--red); }
+  .card .card-val.yellow { color: var(--yellow); }
+  .card .card-val.white { color: var(--white); }
+
+  .card .card-sub {
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* ── Scenario Matrix ── */
+  .matrix-section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .matrix-current {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .matrix-current .mc-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .matrix-current .mc-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--yellow);
+    letter-spacing: 0.05em;
+  }
+
+  .matrix-current .mc-note {
+    font-size: 9px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  thead th {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 8px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+  }
+
+  thead th:first-child { text-align: left; }
+
+  tbody td {
+    padding: 9px 8px;
+    text-align: right;
+    border-bottom: 1px solid rgba(30,30,46,0.6);
+    color: var(--text);
+    font-size: 11px;
+  }
+
+  tbody td:first-child { text-align: left; color: var(--muted); }
+
+  tbody tr.active-row td { background: rgba(0,229,255,0.06); }
+  tbody tr.active-row td:first-child { color: var(--cyan); }
+
+  tbody tr:hover td { background: rgba(255,255,255,0.02); cursor: pointer; }
+
+  .neg { color: var(--red) !important; }
+  .pos { color: var(--green) !important; }
+  .net-val { color: var(--cyan) !important; font-weight: 600; }
+
+  /* ── Footer note ── */
+  .footnote {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    margin-top: 8px;
+  }
+</style>
 </head>
 <body>
-  <div id="root"></div>
+<div class="app">
 
-  <script type="text/babel">
-    const { useState, useMemo } = React;
+  <div class="header">
+    <div class="header-tag">Equity Compensation</div>
+    <h1>ESOP <span>Exit</span><br>Calculator</h1>
+    <div class="header-sub">Cashless · EP = 25% of Grant · Tax = 30%</div>
+  </div>
 
-    const fmt = (val) => {
-      const abs = Math.abs(val);
-      const sign = val < 0 ? "−" : "";
-      if (abs >= 100) return `${sign}₹${(abs / 100).toFixed(2)} Cr`;
-      if (abs >= 1) return `${sign}₹${abs.toFixed(2)}L`;
-      return `${sign}₹${(abs * 100).toFixed(0)}K`;
-    };
+  <!-- EXISTING ESOP -->
+  <div class="section">
+    <div class="section-label">Existing ESOP</div>
 
-    function ESOPDashboard() {
-      const [currentVal, setCurrentVal] = useState(64);
-      const [existingGrant, setExistingGrant] = useState(30);
-      const [vestPct, setVestPct] = useState(45);
-      const [accel, setAccel] = useState(false);
-      const [exercisePct, setExercisePct] = useState(25);
-      const [taxRate, setTaxRate] = useState(30);
-      const [exitVal, setExitVal] = useState(150);
-      const [grants, setGrants] = useState([]);
-      const [newGrant, setNewGrant] = useState({ label: "", grantINR: 0, vestPct: 100 });
+    <div class="input-row">
+      <label>Number of Shares</label>
+      <input type="number" id="numShares" value="100000" min="0" oninput="calc()">
+    </div>
 
-      const addGrant = () => {
-        if (!newGrant.grantINR) return;
-        setGrants(g => [...g, { ...newGrant, id: Date.now(), label: newGrant.label || `Grant ${grants.length + 2}` }]);
-        setNewGrant({ label: "", grantINR: 0, vestPct: 100 });
-      };
+    <div class="computed-row">
+      <span class="c-label">Share Price (Current)</span>
+      <span class="c-val dim">$2.84 / share</span>
+    </div>
 
-      const removeGrant = (id) => setGrants(g => g.filter(x => x.id !== id));
+    <div class="computed-row">
+      <span class="c-label">Grant Value</span>
+      <span class="c-val cyan" id="grantVal">$284,000</span>
+    </div>
 
-      const calc = useMemo(() => {
-        const mult = exitVal / currentVal;
-        const effVest = accel ? 1 : vestPct / 100;
-        const exGrantExit = existingGrant * mult;
-        const exVested = exGrantExit * effVest;
-        const exStrike = existingGrant * (exercisePct / 100) * effVest;
-        const exGross = exVested - exStrike;
-        const exTax = Math.max(0, exGross) * (taxRate / 100);
-        const exNet = Math.max(0, exGross) - exTax;
-        const incRows = grants.map(g => {
-          const grantExit = g.grantINR * mult;
-          const vested = grantExit * (g.vestPct / 100);
-          const strike = g.grantINR * (exercisePct / 100) * (g.vestPct / 100);
-          const gross = vested - strike;
-          const tax = Math.max(0, gross) * (taxRate / 100);
-          const net = Math.max(0, gross) - tax;
-          return { ...g, grantExit, vested, strike, gross, tax, net };
-        });
-        const totalNet = exNet + incRows.reduce((a, r) => a + r.net, 0);
-        const totalGross = exGross + incRows.reduce((a, r) => a + r.gross, 0);
-        const totalStrike = exStrike + incRows.reduce((a, r) => a + r.strike, 0);
-        const totalTax = exTax + incRows.reduce((a, r) => a + r.tax, 0);
-        const totalExitVal = exVested + incRows.reduce((a, r) => a + r.vested, 0);
-        return { exGrantExit, exVested, exStrike, exGross, exTax, exNet, incRows, totalNet, totalGross, totalStrike, totalTax, totalExitVal };
-      }, [exitVal, currentVal, existingGrant, vestPct, accel, exercisePct, taxRate, grants]);
+    <div class="computed-row">
+      <span class="c-label">Exercise Price (25% of Grant)</span>
+      <span class="c-val red-col" id="epVal">$71,000</span>
+    </div>
+  </div>
 
-      const scenarios = [50, 100, 150, 200, 250, 300, 400];
+  <!-- EXIT VALUATION SLIDER -->
+  <div class="slider-section">
+    <div class="section-label">Exit Valuation</div>
+    <div class="slider-header">
+      <span class="s-label">Company Valuation at Exit</span>
+      <span class="s-val" id="sliderLabel">$150M</span>
+    </div>
+    <div class="slider-track">
+      <input type="range" id="exitSlider" min="10" max="500" value="150" step="5" oninput="onSlider()">
+    </div>
+    <div class="slider-labels">
+      <span>$10M</span><span>$100M</span><span>$200M</span><span>$350M</span><span>$500M</span>
+    </div>
+  </div>
 
-      const css = {
-        app: { fontFamily: "'DM Mono', 'Fira Code', monospace", background: "#080c14", minHeight: "100vh", color: "#c9d1e0", padding: "28px 24px", maxWidth: 900, margin: "0 auto" },
-        section: { background: "#0f1520", border: "1px solid #1c2535", borderRadius: 10, padding: "18px 20px", marginBottom: 16 },
-        label: { fontSize: 10, color: "#3d5070", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 },
-        h2: { fontSize: 11, color: "#3d5070", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 14 },
-        input: { background: "#080c14", border: "1px solid #1c2535", borderRadius: 6, color: "#c9d1e0", padding: "7px 10px", fontSize: 13, width: "100%", outline: "none", fontFamily: "inherit" },
-        btn: { background: "#1c4ed8", border: "none", borderRadius: 6, color: "#fff", padding: "8px 16px", cursor: "pointer", fontSize: 12, fontFamily: "inherit", fontWeight: 700 },
-      };
+  <!-- RESULT CARDS -->
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-label">Shares Value at Exit</div>
+      <div class="card-val cyan" id="c-sharesVal">—</div>
+      <div class="card-sub" id="c-sharesValUSD">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Exercise Cost</div>
+      <div class="card-val red" id="c-exerciseCost">—</div>
+      <div class="card-sub">25% of grant value</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Gross Gain</div>
+      <div class="card-val yellow" id="c-grossGain">—</div>
+      <div class="card-sub" id="c-grossGainUSD">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Tax (30%)</div>
+      <div class="card-val red" id="c-tax">—</div>
+      <div class="card-sub">on gross gain</div>
+    </div>
+    <div class="card full">
+      <div class="card-label">Net Cash in Hand</div>
+      <div class="card-val green" id="c-netCash">—</div>
+      <div class="card-sub" id="c-multiple">—</div>
+    </div>
+  </div>
 
-      const tag = (color) => ({ background: color + "18", border: `1px solid ${color}40`, color, borderRadius: 4, padding: "1px 7px", fontSize: 11, fontWeight: 700 });
+  <!-- SCENARIO MATRIX -->
+  <div class="matrix-section">
+    <div class="section-label">Scenario Matrix</div>
 
-      const StatCard = ({ label, value, accent }) => (
-        <div style={{ background: "#080c14", border: `1px solid ${accent}30`, borderRadius: 8, padding: "14px 16px" }}>
-          <div style={{ ...css.label, marginBottom: 6 }}>{label}</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: accent, letterSpacing: "-0.02em", lineHeight: 1 }}>{value}</div>
-        </div>
-      );
+    <div class="matrix-current">
+      <div>
+        <div class="mc-label">Current Valuation</div>
+        <div class="mc-val" id="currentValDisplay">$64M</div>
+      </div>
+      <div>
+        <div class="mc-note" id="currentNetNote">Net at current val</div>
+        <div class="mc-val" id="currentNetVal" style="text-align:right; color:var(--cyan)">—</div>
+      </div>
+    </div>
 
-      const SliderRow = ({ label, value, min, max, step, onChange, display, color = "#4a90d9" }) => (
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-            <span style={css.label}>{label}</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color }}>{display != null ? display : value}</span>
-          </div>
-          <input type="range" min={min} max={max} step={step} value={value}
-            onChange={e => onChange(+e.target.value)}
-            style={{ width: "100%", accentColor: color, cursor: "pointer" }} />
-        </div>
-      );
+    <div class="input-row" style="margin-bottom:14px;">
+      <label>Current Company Valuation ($M)</label>
+      <input type="number" id="currentVal" value="64" min="1" oninput="calc()">
+    </div>
 
-      const totalGrantBase = existingGrant + grants.reduce((a, g) => a + g.grantINR, 0);
+    <table>
+      <thead>
+        <tr>
+          <th>Exit Val</th>
+          <th>Shares Value</th>
+          <th>Ex. Cost</th>
+          <th>Gross Gain</th>
+          <th>Tax</th>
+          <th>Net Cash</th>
+        </tr>
+      </thead>
+      <tbody id="matrixBody"></tbody>
+    </table>
 
-      return (
-        <div style={css.app}>
-          {/* Header */}
-          <div style={{ marginBottom: 22, borderBottom: "1px solid #1c2535", paddingBottom: 16 }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-              <h1 style={{ fontSize: 18, fontWeight: 800, color: "#e2e8f0", margin: 0, letterSpacing: "-0.02em" }}>ESOP Exit Calculator</h1>
-              <span style={tag("#64748b")}>Snaptrude</span>
-            </div>
-            <div style={{ fontSize: 11, color: "#2d3d54", marginTop: 4 }}>
-              Cashless / bonus settlement · Exercise price = {exercisePct}% of FMV
-            </div>
-          </div>
+    <div class="footnote">
+      * Highlighted row = current slider selection. Click any row to update slider.<br>
+      All ₹ values at 1 USD = ₹84. EP = 25% of grant. Tax = 30% flat on gross gain.
+    </div>
+  </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 16, alignItems: "start" }}>
+</div>
 
-            {/* LEFT */}
-            <div>
-              <div style={css.section}>
-                <div style={css.h2}>Existing ESOP</div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ ...css.label, marginBottom: 5 }}>Grant Value at ${currentVal}M (₹L)</div>
-                  <input style={css.input} type="number" value={existingGrant} onChange={e => setExistingGrant(+e.target.value)} />
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ ...css.label, marginBottom: 5 }}>Current Valuation ($M)</div>
-                  <input style={css.input} type="number" value={currentVal} onChange={e => setCurrentVal(+e.target.value)} />
-                </div>
-                <SliderRow label="Vested %" value={accel ? 100 : vestPct} min={0} max={100} step={5}
-                  onChange={setVestPct} display={`${accel ? 100 : vestPct}%`} color="#a78bfa" />
-                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
-                  <input type="checkbox" id="ac" checked={accel} onChange={e => setAccel(e.target.checked)} style={{ accentColor: "#34d399", cursor: "pointer" }} />
-                  <label htmlFor="ac" style={{ fontSize: 11, color: "#4a5568", cursor: "pointer" }}>Accelerated vesting at exit</label>
-                </div>
-              </div>
+<script>
+  const SHARE_PRICE = 2.84;
+  const USD_INR = 84;
+  const EP_PCT = 0.25;
+  const TAX_RATE = 0.30;
 
-              <div style={css.section}>
-                <div style={css.h2}>Add Incremental Grant</div>
-                <div style={{ marginBottom: 8 }}>
-                  <div style={{ ...css.label, marginBottom: 4 }}>Label (optional)</div>
-                  <input style={css.input} placeholder="e.g. FY26 top-up" value={newGrant.label}
-                    onChange={e => setNewGrant(g => ({ ...g, label: e.target.value }))} />
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <div style={{ ...css.label, marginBottom: 4 }}>Grant Value at ${currentVal}M (₹L)</div>
-                  <input style={css.input} type="number" value={newGrant.grantINR || ""}
-                    onChange={e => setNewGrant(g => ({ ...g, grantINR: +e.target.value }))} placeholder="0" />
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={css.label}>Vesting % at exit</span>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#34d399" }}>{newGrant.vestPct}%</span>
-                  </div>
-                  <input type="range" min={0} max={100} step={5} value={newGrant.vestPct}
-                    onChange={e => setNewGrant(g => ({ ...g, vestPct: +e.target.value }))}
-                    style={{ width: "100%", accentColor: "#34d399", cursor: "pointer" }} />
-                </div>
-                <button style={css.btn} onClick={addGrant}>+ Add Grant</button>
-              </div>
+  const SCENARIOS = [50, 75, 100, 125, 150, 200, 250, 300, 400, 500];
 
-              <div style={css.section}>
-                <div style={css.h2}>Parameters</div>
-                <SliderRow label="Exercise Price (% of FMV)" value={exercisePct} min={0} max={100} step={5}
-                  onChange={setExercisePct} display={`${exercisePct}%`} color="#fbbf24" />
-                <SliderRow label="Tax Rate" value={taxRate} min={10} max={40} step={5}
-                  onChange={setTaxRate} display={`${taxRate}%`} color="#f87171" />
-              </div>
-            </div>
+  function usdToInr(usd) {
+    const inr = usd * USD_INR;
+    if (inr >= 1e7) return '₹' + (inr / 1e7).toFixed(2) + 'Cr';
+    if (inr >= 1e5) return '₹' + (inr / 1e5).toFixed(2) + 'L';
+    return '₹' + Math.round(inr).toLocaleString('en-IN');
+  }
 
-            {/* RIGHT */}
-            <div>
-              <div style={{ ...css.section, borderColor: "#1c4ed850", background: "#0a1020" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-                  <span style={css.h2}>Exit Valuation</span>
-                  <span style={{ fontSize: 32, fontWeight: 900, color: "#60a5fa", letterSpacing: "-0.04em" }}>${exitVal}M</span>
-                </div>
-                <input type="range" min={20} max={500} step={10} value={exitVal} onChange={e => setExitVal(+e.target.value)}
-                  style={{ width: "100%", accentColor: "#60a5fa", cursor: "pointer" }} />
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, fontSize: 10, color: "#2d3d54" }}>
-                  {[50, 100, 150, 200, 300, 400, 500].map(v => (
-                    <span key={v} onClick={() => setExitVal(v)}
-                      style={{ cursor: "pointer", color: exitVal === v ? "#60a5fa" : "#2d3d54" }}>${v}M</span>
-                  ))}
-                </div>
-              </div>
+  function fmtUSD(usd) {
+    if (Math.abs(usd) >= 1e6) return '$' + (usd / 1e6).toFixed(2) + 'M';
+    if (Math.abs(usd) >= 1e3) return '$' + Math.round(usd / 1e3) + 'K';
+    return '$' + Math.round(usd);
+  }
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 16 }}>
-                <StatCard label="Shares Value at Exit" value={fmt(calc.totalExitVal)} accent="#60a5fa" />
-                <StatCard label="Exercise Cost" value={`−${fmt(calc.totalStrike)}`} accent="#f87171" />
-                <StatCard label="Gross Gain" value={fmt(calc.totalGross)} accent="#a78bfa" />
-                <StatCard label="Tax Payable" value={`−${fmt(calc.totalTax)}`} accent="#fbbf24" />
-                <StatCard label="Net Cash in Hand" value={fmt(calc.totalNet)} accent="#34d399" />
-                <StatCard label="Multiple on Grant" value={`${(calc.totalNet / totalGrantBase).toFixed(2)}×`} accent="#e879f9" />
-              </div>
+  function compute(shares, exitValM) {
+    const grantVal = shares * SHARE_PRICE;           // USD
+    const ep = grantVal * EP_PCT;                    // USD
 
-              {grants.length > 0 && (
-                <div style={css.section}>
-                  <div style={css.h2}>Grant Breakdown at ${exitVal}M</div>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
-                    <thead>
-                      <tr style={{ color: "#3d5070" }}>
-                        {["Grant", "Vest%", "Value at Exit", "Exercise Cost", "Gross", "Tax", "Net"].map(h => (
-                          <th key={h} style={{ textAlign: "right", padding: "5px 8px", fontWeight: 600, borderBottom: "1px solid #1c2535" }}>{h}</th>
-                        ))}
-                        <th style={{ padding: "5px 8px", borderBottom: "1px solid #1c2535" }}></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr style={{ background: "#0f1520" }}>
-                        <td style={{ padding: "7px 8px", color: "#a78bfa", fontWeight: 700, textAlign: "right" }}>Existing</td>
-                        <td style={{ padding: "7px 8px", textAlign: "right", color: "#64748b" }}>{accel ? 100 : vestPct}%</td>
-                        <td style={{ padding: "7px 8px", textAlign: "right", color: "#60a5fa" }}>{fmt(calc.exVested)}</td>
-                        <td style={{ padding: "7px 8px", textAlign: "right", color: "#f87171" }}>−{fmt(calc.exStrike)}</td>
-                        <td style={{ padding: "7px 8px", textAlign: "right", color: "#a78bfa" }}>{fmt(calc.exGross)}</td>
-                        <td style={{ padding: "7px 8px", textAlign: "right", color: "#fbbf24" }}>−{fmt(calc.exTax)}</td>
-                        <td style={{ padding: "7px 8px", textAlign: "right", color: "#34d399", fontWeight: 700 }}>{fmt(calc.exNet)}</td>
-                        <td></td>
-                      </tr>
-                      {calc.incRows.map(r => (
-                        <tr key={r.id}>
-                          <td style={{ padding: "7px 8px", color: "#94a3b8", textAlign: "right" }}>{r.label}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#64748b" }}>{r.vestPct}%</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#60a5fa" }}>{fmt(r.vested)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#f87171" }}>−{fmt(r.strike)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#a78bfa" }}>{fmt(r.gross)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#fbbf24" }}>−{fmt(r.tax)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#34d399", fontWeight: 700 }}>{fmt(r.net)}</td>
-                          <td style={{ padding: "7px 8px" }}>
-                            <span onClick={() => removeGrant(r.id)} style={{ cursor: "pointer", color: "#3d5070", fontSize: 13 }}>✕</span>
-                          </td>
-                        </tr>
-                      ))}
-                      <tr style={{ borderTop: "1px solid #1c2535" }}>
-                        <td colSpan={4} style={{ padding: "8px 8px", color: "#3d5070", textAlign: "right", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.07em" }}>Total</td>
-                        <td style={{ padding: "8px 8px", textAlign: "right", color: "#a78bfa", fontWeight: 700 }}>{fmt(calc.totalGross)}</td>
-                        <td style={{ padding: "8px 8px", textAlign: "right", color: "#fbbf24", fontWeight: 700 }}>−{fmt(calc.totalTax)}</td>
-                        <td style={{ padding: "8px 8px", textAlign: "right", color: "#34d399", fontWeight: 900, fontSize: 14 }}>{fmt(calc.totalNet)}</td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
+    // Total company shares implied: grant value / share price = shares (user owns these)
+    // Ownership % = shares / total_shares_implied_at_current_val
+    // We need total shares at current val. At $2.84/share current val is set by user ($64M default).
+    const currentValM = parseFloat(document.getElementById('currentVal').value) || 64;
+    const totalSharesImplied = (currentValM * 1e6) / SHARE_PRICE;
+    const ownershipPct = shares / totalSharesImplied;
 
-              <div style={css.section}>
-                <div style={css.h2}>Scenario Matrix — Net Cash in Hand</div>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
-                  <thead>
-                    <tr style={{ color: "#3d5070" }}>
-                      {["Exit Val", "Shares Value", "Exercise Cost", "Gross Gain", "Tax", "Net Cash"].map(h => (
-                        <th key={h} style={{ padding: "5px 8px", textAlign: "right", fontWeight: 600, borderBottom: "1px solid #1c2535" }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {scenarios.map(v => {
-                      const mult = v / currentVal;
-                      const effVest = accel ? 1 : vestPct / 100;
-                      const ev = existingGrant * mult * effVest + grants.reduce((a, g) => a + g.grantINR * mult * (g.vestPct / 100), 0);
-                      const strike = existingGrant * (exercisePct / 100) * effVest + grants.reduce((a, g) => a + g.grantINR * (exercisePct / 100) * (g.vestPct / 100), 0);
-                      const gross = ev - strike;
-                      const tax = Math.max(0, gross) * (taxRate / 100);
-                      const net = Math.max(0, gross) - tax;
-                      const isActive = v === exitVal;
-                      return (
-                        <tr key={v} onClick={() => setExitVal(v)}
-                          style={{ background: isActive ? "#1c2d4a" : "transparent", cursor: "pointer" }}>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: isActive ? "#60a5fa" : v === currentVal ? "#fbbf24" : "#64748b", fontWeight: isActive ? 800 : 500 }}>
-                            ${v}M{v === currentVal ? " ·" : ""}
-                          </td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#94a3b8" }}>{fmt(ev)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#f87171" }}>−{fmt(strike)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: gross >= 0 ? "#a78bfa" : "#f87171" }}>{fmt(gross)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#fbbf24" }}>−{fmt(tax)}</td>
-                          <td style={{ padding: "7px 8px", textAlign: "right", color: "#34d399", fontWeight: 700 }}>{fmt(net)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                <div style={{ fontSize: 10, color: "#2d3d54", marginTop: 8 }}>Click any row to update exit slider. · = current valuation.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
+    const sharesValueUSD = ownershipPct * exitValM * 1e6;  // USD
+    const grossGain = sharesValueUSD - ep;
+    const tax = grossGain > 0 ? grossGain * TAX_RATE : 0;
+    const netCash = grossGain - tax;
+    const multiple = ep > 0 ? netCash / grantVal : 0;
 
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<ESOPDashboard />);
-  </script>
+    return { grantVal, ep, sharesValueUSD, grossGain, tax, netCash, multiple, ownershipPct };
+  }
+
+  function calc() {
+    const shares = parseInt(document.getElementById('numShares').value) || 0;
+    const exitValM = parseInt(document.getElementById('exitSlider').value) || 150;
+    const currentValM = parseFloat(document.getElementById('currentVal').value) || 64;
+
+    const grantVal = shares * SHARE_PRICE;
+    const ep = grantVal * EP_PCT;
+
+    document.getElementById('grantVal').textContent = fmtUSD(grantVal) + ' (' + usdToInr(grantVal) + ')';
+    document.getElementById('epVal').textContent = fmtUSD(ep) + ' (' + usdToInr(ep) + ')';
+
+    const r = compute(shares, exitValM);
+
+    document.getElementById('c-sharesVal').textContent = usdToInr(r.sharesValueUSD);
+    document.getElementById('c-sharesValUSD').textContent = fmtUSD(r.sharesValueUSD) + ' · ' + (r.ownershipPct * 100).toFixed(2) + '% ownership';
+    document.getElementById('c-exerciseCost').textContent = '-' + usdToInr(r.ep);
+    document.getElementById('c-grossGain').textContent = r.grossGain > 0 ? usdToInr(r.grossGain) : '-' + usdToInr(Math.abs(r.grossGain));
+    document.getElementById('c-grossGainUSD').textContent = fmtUSD(r.grossGain);
+    document.getElementById('c-tax').textContent = '-' + usdToInr(r.tax);
+    document.getElementById('c-netCash').textContent = r.netCash > 0 ? usdToInr(r.netCash) : '-' + usdToInr(Math.abs(r.netCash));
+    document.getElementById('c-multiple').textContent = 'Multiple on grant: ' + r.multiple.toFixed(2) + 'x';
+
+    // Current val display
+    document.getElementById('currentValDisplay').textContent = '$' + currentValM + 'M';
+    const rCurrent = compute(shares, currentValM);
+    document.getElementById('currentNetVal').textContent = rCurrent.netCash > 0 ? usdToInr(rCurrent.netCash) : '-' + usdToInr(Math.abs(rCurrent.netCash));
+    document.getElementById('currentNetNote').textContent = 'Net at $' + currentValM + 'M';
+
+    // Matrix
+    renderMatrix(shares, exitValM);
+  }
+
+  function renderMatrix(shares, activeValM) {
+    const tbody = document.getElementById('matrixBody');
+    tbody.innerHTML = '';
+    SCENARIOS.forEach(valM => {
+      const r = compute(shares, valM);
+      const isActive = valM === activeValM;
+      const tr = document.createElement('tr');
+      if (isActive) tr.className = 'active-row';
+      tr.innerHTML = `
+        <td>$${valM}M${isActive ? ' ◀' : ''}</td>
+        <td>${usdToInr(r.sharesValueUSD)}</td>
+        <td class="neg">-${usdToInr(r.ep)}</td>
+        <td class="${r.grossGain >= 0 ? '' : 'neg'}">${r.grossGain >= 0 ? usdToInr(r.grossGain) : '-' + usdToInr(Math.abs(r.grossGain))}</td>
+        <td class="neg">-${usdToInr(r.tax)}</td>
+        <td class="net-val">${r.netCash >= 0 ? usdToInr(r.netCash) : '<span class="neg">-' + usdToInr(Math.abs(r.netCash)) + '</span>'}</td>
+      `;
+      tr.addEventListener('click', () => {
+        document.getElementById('exitSlider').value = valM;
+        document.getElementById('sliderLabel').textContent = '$' + valM + 'M';
+        calc();
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  function onSlider() {
+    const v = document.getElementById('exitSlider').value;
+    document.getElementById('sliderLabel').textContent = '$' + v + 'M';
+    calc();
+  }
+
+  calc();
+</script>
 </body>
 </html>
