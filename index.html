@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ESOP Exit Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>ESOP Valuation Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg:      #06080f;
     --panel:   #0b0e1a;
     --panel2:  #101528;
-    --panel3:  #161c33;
     --line:    #2a3354;
     --line2:   #36406a;
 
@@ -19,11 +18,11 @@
     --green:   #5edb8e;
     --orange:  #f5822a;
     --red:     #f56060;
-    --blue:    #7aa4f5;
-    --muted:   #7a8fb8;   /* was 3d4d6e — much brighter */
-    --text:    #b8c8e8;   /* was 8a9bbf — brighter */
+    --muted:   #7a8fb8;
+    --text:    #b8c8e8;
+    --label:   #94a8d0;
+    --dimmed:  #3d4d6e;   /* greyed out — for current val label */
     --white:   #dce8ff;
-    --label:   #94a8d0;   /* new — for section labels & table headers */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,6 +32,7 @@
     background: var(--bg);
     color: var(--text);
     font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px; /* bumped from ~12px base */
   }
 
   body {
@@ -45,23 +45,15 @@
   .topbar {
     background: var(--panel);
     border-bottom: 2px solid var(--line2);
-    padding: 12px 28px;
+    padding: 13px 28px;
     display: flex;
     align-items: center;
     flex-shrink: 0;
   }
 
-  .topbar-tag {
-    font-size: 8px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--label);
-    margin-bottom: 2px;
-  }
-
   .topbar h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.9rem;
+    font-size: 2rem;
     letter-spacing: 0.08em;
     color: var(--white);
     line-height: 1;
@@ -72,7 +64,7 @@
   /* ── MAIN LAYOUT ── */
   .layout {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 306px 1fr;
     flex: 1;
     overflow: hidden;
   }
@@ -89,10 +81,11 @@
   }
 
   .sec-label {
-    font-size: 8px;
+    font-size: 9.5px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--label);
+    font-weight: 700;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -103,10 +96,11 @@
   .input-row { margin-bottom: 10px; }
   .input-row label {
     display: block;
-    font-size: 9px;
+    font-size: 9.5px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--label);
+    font-weight: 600;
     margin-bottom: 5px;
   }
 
@@ -116,7 +110,7 @@
     border: 1px solid var(--line2);
     color: var(--white);
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
+    font-size: 15.5px;
     font-weight: 500;
     padding: 9px 12px;
     outline: none;
@@ -126,6 +120,26 @@
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
   input[type="number"]:focus { border-color: var(--cyan); }
+
+  /* greyed-out current val input */
+  input[type="number"].greyed {
+    color: var(--dimmed);
+    border-color: var(--line);
+    background: var(--bg);
+  }
+  input[type="number"].greyed:focus {
+    border-color: var(--line2);
+    color: var(--muted);
+  }
+  .greyed-label {
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dimmed) !important;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+  }
 
   .computed-row {
     display: flex;
@@ -137,28 +151,18 @@
     margin-bottom: 6px;
   }
   .computed-row .cl {
-    font-size: 9px;
+    font-size: 9.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--label);
+    font-weight: 600;
   }
-  .computed-row .cv         { font-size: 12px; font-weight: 500; }
-  .computed-row .cv.dim     { color: var(--muted); font-size: 11px; }
-  .computed-row .cv.cyan    { color: var(--cyan); }
-  .computed-row .cv.red     { color: var(--red); }
+  .computed-row .cv      { font-size: 13px; font-weight: 500; }
+  .computed-row .cv.dim  { color: var(--muted); font-size: 12px; }
+  .computed-row .cv.cyan { color: var(--cyan); }
+  .computed-row .cv.red  { color: var(--red); }
 
-  /* current val inside left panel */
-  .cur-input-row {
-    margin-top: 10px;
-  }
-  .cur-input-row label {
-    display: block;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--label);
-    margin-bottom: 5px;
-  }
+  .cur-input-row { margin-top: 10px; }
 
   /* ── RIGHT PANEL ── */
   .right-panel {
@@ -168,15 +172,14 @@
     flex-direction: column;
   }
 
-  .matrix-header {
-    margin-bottom: 14px;
-  }
+  .matrix-header { margin-bottom: 14px; }
 
   .matrix-title {
-    font-size: 8px;
+    font-size: 9.5px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--label);
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -184,17 +187,14 @@
   .matrix-title::after { content:''; width:40px; height:1px; background:var(--line2); }
 
   /* Table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
+  table { width: 100%; border-collapse: collapse; }
 
   thead th {
-    font-size: 8px;
+    font-size: 9px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--label);
+    font-weight: 700;
     padding: 7px 10px;
     text-align: right;
     border-bottom: 1px solid var(--line2);
@@ -207,13 +207,13 @@
     text-align: right;
     border-bottom: 1px solid rgba(42,51,84,0.7);
     color: var(--text);
-    font-size: 12px;
+    font-size: 13px;
   }
-  tbody td:first-child { text-align: left; color: var(--muted); font-size: 11px; }
+  tbody td:first-child { text-align: left; color: var(--muted); font-size: 12px; }
 
   tbody tr.current-row { background: rgba(56,217,245,0.06); }
   tbody tr.current-row td:first-child { color: var(--cyan); font-weight: 600; }
-  tbody tr:hover td { background: rgba(255,255,255,0.025); cursor: pointer; }
+  tbody tr:hover td { background: rgba(255,255,255,0.025); }
 
   .t-neg      { color: var(--red)    !important; }
   .t-pos      { color: var(--green)  !important; }
@@ -229,10 +229,11 @@
   }
 
   .notes-title {
-    font-size: 8px;
+    font-size: 9.5px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--label);
+    font-weight: 700;
     margin-bottom: 10px;
   }
 
@@ -245,7 +246,7 @@
   }
 
   .notes ul li {
-    font-size: 10px;
+    font-size: 10.5px;
     color: var(--text);
     letter-spacing: 0.04em;
     line-height: 1.6;
@@ -262,15 +263,10 @@
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <div>
-    <div class="topbar-tag">Equity Compensation</div>
-    <h1>ESOP <span>Exit</span> Calculator</h1>
-  </div>
+  <h1>ESOP <span>Valuation</span> Dashboard</h1>
 </div>
 
-<!-- MAIN -->
 <div class="layout">
 
   <!-- LEFT -->
@@ -297,8 +293,8 @@
     </div>
 
     <div class="cur-input-row">
-      <label>Current Company Valuation ($M)</label>
-      <input type="number" id="currentVal" value="64" min="1" oninput="calc()">
+      <label class="greyed-label">Current Company Valuation ($M)</label>
+      <input type="number" id="currentVal" class="greyed" value="64" min="1" oninput="calc()">
     </div>
 
   </div>
@@ -316,7 +312,7 @@
           <th>Exit Valuation</th>
           <th>Shares Value</th>
           <th>Exercise Cost</th>
-          <th>Gross Gain</th>
+          <th>Net Gain</th>
           <th>Tax (30%)</th>
           <th>Net Cash in Hand</th>
           <th>Multiple</th>
@@ -330,7 +326,7 @@
       <ul>
         <li>All options assumed fully vested at exit — no partial vesting applied</li>
         <li>Exercise Price = 25% of Grant Value (cashless settlement assumed)</li>
-        <li>Tax = 30% flat on Gross Gain (perquisite income basis)</li>
+        <li>Tax = 30% flat on Net Gain (perquisite income basis)</li>
         <li>1 USD = ₹95 · Share Price = $2.84 (current) · Grant Value = Shares × $2.84</li>
         <li>Shares Value at Exit = Ownership % × Exit Valuation · Ownership % = Your Shares ÷ Total Implied Shares at Current Valuation</li>
         <li>Highlighted row = current company valuation</li>
@@ -388,8 +384,8 @@
   }
 
   function calc() {
-    const shares       = parseInt(document.getElementById('numShares').value)    || 0;
-    const currentValM  = parseFloat(document.getElementById('currentVal').value) || 64;
+    const shares      = parseInt(document.getElementById('numShares').value)     || 0;
+    const currentValM = parseFloat(document.getElementById('currentVal').value)  || 64;
 
     const grantVal = shares * SHARE_PRICE;
     const ep       = grantVal * EP_PCT;
