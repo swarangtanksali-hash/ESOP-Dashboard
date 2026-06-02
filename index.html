@@ -7,20 +7,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #1a1208;
-    --panel:    #231a0a;
-    --panel2:   #2e2210;
-    --line:     #3d2f14;
-    --line2:    #4a3a1c;
-    --amber:    #f0a820;
-    --orange:   #f06428;
-    --green:    #6ab04c;
-    --red:      #e05030;
-    --cream:    #f5e8c8;
-    --muted:    #8a7050;
-    --text:     #d8c090;
-    --white:    #f8f0dc;
-    --highlight:#3d2a08;
+    --bg:      #06080f;
+    --panel:   #0b0e1a;
+    --panel2:  #101528;
+    --panel3:  #161c33;
+    --line:    #1e2540;
+    --line2:   #28304e;
+
+    --cyan:    #38d9f5;
+    --yellow:  #f5d038;
+    --green:   #5edb8e;
+    --orange:  #f5822a;
+    --red:     #f54a4a;
+    --blue:    #5b8af5;
+    --muted:   #3d4d6e;
+    --text:    #8a9bbf;
+    --white:   #dce8ff;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,14 +38,13 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: 0;
   }
 
-  /* ── TOP HEADER BAR ── */
+  /* ── TOP BAR ── */
   .topbar {
     background: var(--panel);
-    border-bottom: 1px solid var(--line);
-    padding: 14px 32px;
+    border-bottom: 2px solid var(--line2);
+    padding: 12px 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -52,8 +53,15 @@
 
   .topbar-left {
     display: flex;
-    align-items: baseline;
-    gap: 16px;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .topbar-tag {
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .topbar h1 {
@@ -64,58 +72,43 @@
     line-height: 1;
   }
 
-  .topbar h1 span { color: var(--amber); }
-
-  .topbar-tag {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .topbar-right {
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-align: right;
-    line-height: 1.8;
-  }
+  .topbar h1 span { color: var(--yellow); }
 
   /* ── MAIN LAYOUT ── */
   .layout {
     display: grid;
-    grid-template-columns: 340px 1fr;
+    grid-template-columns: 300px 1fr;
     flex: 1;
-    min-height: 0;
     overflow: hidden;
   }
 
   /* ── LEFT PANEL ── */
   .left-panel {
     background: var(--panel);
-    border-right: 1px solid var(--line);
-    padding: 24px 20px;
+    border-right: 1px solid var(--line2);
+    padding: 20px 18px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     overflow-y: auto;
   }
 
   .sec-label {
-    font-size: 9px;
-    letter-spacing: 0.2em;
+    font-size: 8px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .sec-label::after { content:''; flex:1; height:1px; background:var(--line); }
+  .sec-label::after { content:''; flex:1; height:1px; background:var(--line2); }
 
+  .input-row { margin-bottom: 10px; }
   .input-row label {
     display: block;
-    font-size: 9px;
+    font-size: 8px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--muted);
@@ -137,7 +130,7 @@
   }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-  input[type="number"]:focus { border-color: var(--amber); }
+  input[type="number"]:focus { border-color: var(--cyan); }
 
   .computed-row {
     display: flex;
@@ -146,145 +139,91 @@
     background: var(--panel2);
     border: 1px solid var(--line);
     padding: 8px 12px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
-  .computed-row .cl { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  .computed-row .cv { font-size: 13px; font-weight: 500; }
-  .computed-row .cv.dim { color: var(--muted); font-size: 11px; }
-  .computed-row .cv.amber { color: var(--amber); }
-  .computed-row .cv.red { color: var(--red); }
+  .computed-row .cl {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .computed-row .cv         { font-size: 12px; font-weight: 500; }
+  .computed-row .cv.dim     { color: var(--muted); font-size: 11px; }
+  .computed-row .cv.cyan    { color: var(--cyan); }
+  .computed-row .cv.red     { color: var(--red); }
 
-  /* Result cards */
-  .cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
+  /* Cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 
   .card {
     background: var(--panel2);
     border: 1px solid var(--line);
-    padding: 12px 14px;
+    padding: 11px 13px;
   }
   .card.full { grid-column: 1/-1; }
 
   .card .cl {
-    font-size: 8px;
+    font-size: 7px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 4px;
   }
-
   .card .cv {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     letter-spacing: 0.04em;
     line-height: 1.1;
   }
-
-  .card .cv.amber  { color: var(--amber); }
+  .card .cv.cyan   { color: var(--cyan); }
+  .card .cv.yellow { color: var(--yellow); }
   .card .cv.green  { color: var(--green); }
   .card .cv.red    { color: var(--red); }
   .card .cv.orange { color: var(--orange); }
-  .card .cv.cream  { color: var(--cream); }
-
-  .card .cs {
-    font-size: 9px;
-    color: var(--muted);
-    margin-top: 2px;
-  }
+  .card .cs { font-size: 8px; color: var(--muted); margin-top: 2px; }
 
   /* ── RIGHT PANEL ── */
   .right-panel {
-    padding: 24px 28px;
+    padding: 20px 24px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
   .matrix-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
-  .matrix-header .mh-title {
-    font-size: 9px;
-    letter-spacing: 0.2em;
+  .matrix-title {
+    font-size: 8px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 4px;
-  }
-
-  .matrix-header .mh-note {
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-    margin-top: 4px;
-    padding: 4px 10px;
-    border: 1px solid var(--line2);
-    background: var(--panel2);
-    display: inline-block;
-  }
-
-  .current-val-row {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 12px 16px;
-    background: var(--highlight);
-    border: 1px solid var(--line2);
-    margin-bottom: 16px;
+    gap: 8px;
   }
+  .matrix-title::after { content:''; width:40px; height:1px; background:var(--line2); }
 
-  .current-val-row .cv-label {
-    font-size: 9px;
-    letter-spacing: 0.15em;
+  /* current val input in header */
+  .cur-val-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cur-val-wrap label {
+    font-size: 8px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 2px;
   }
-
-  .current-val-row .cv-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    color: var(--amber);
-    letter-spacing: 0.06em;
-  }
-
-  .current-val-row .cv-input {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .current-val-row input[type="number"] {
-    width: 100px;
+  .cur-val-wrap input[type="number"] {
+    width: 88px;
     font-size: 13px;
     padding: 6px 10px;
-    background: var(--panel2);
-    border: 1px solid var(--line2);
-  }
-
-  .current-val-row .cv-net {
-    margin-left: auto;
-    text-align: right;
-  }
-
-  .current-val-row .cv-net-label {
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    margin-bottom: 2px;
-  }
-
-  .current-val-row .cv-net-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    color: var(--amber);
-    letter-spacing: 0.04em;
   }
 
   /* Table */
@@ -295,11 +234,11 @@
   }
 
   thead th {
-    font-size: 8px;
+    font-size: 7px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
-    padding: 7px 10px;
+    padding: 6px 10px;
     text-align: right;
     border-bottom: 1px solid var(--line2);
     white-space: nowrap;
@@ -307,31 +246,61 @@
   thead th:first-child { text-align: left; }
 
   tbody td {
-    padding: 10px 10px;
+    padding: 9px 10px;
     text-align: right;
-    border-bottom: 1px solid rgba(61,47,20,0.5);
-    font-size: 12px;
+    border-bottom: 1px solid rgba(30,37,64,0.8);
     color: var(--text);
+    font-size: 12px;
   }
   tbody td:first-child { text-align: left; color: var(--muted); font-size: 11px; }
 
-  tbody tr.current-row td { background: var(--highlight); }
-  tbody tr.current-row td:first-child { color: var(--amber); font-weight: 600; }
-  tbody tr:hover td { background: rgba(61,47,20,0.4); cursor: default; }
+  tbody tr.current-row { background: rgba(56,217,245,0.05); }
+  tbody tr.current-row td:first-child { color: var(--cyan); font-weight: 600; }
+  tbody tr:hover td { background: rgba(255,255,255,0.02); cursor: pointer; }
 
   .t-neg  { color: var(--red)    !important; }
   .t-pos  { color: var(--green)  !important; }
-  .t-net  { color: var(--amber)  !important; font-weight: 600; }
-  .t-muted{ color: var(--muted)  !important; }
+  .t-net  { color: var(--cyan)   !important; font-weight: 600; }
+  .t-mult-pos { color: var(--yellow) !important; }
+  .t-mult-neg { color: var(--red)    !important; }
 
-  .footnote {
+  /* Notes */
+  .notes {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    margin-top: 18px;
+  }
+
+  .notes-title {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .notes ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .notes ul li {
     font-size: 9px;
     color: var(--muted);
-    letter-spacing: 0.06em;
-    line-height: 1.8;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-    margin-top: 14px;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    display: flex;
+    gap: 8px;
+  }
+
+  .notes ul li::before {
+    content: '•';
+    color: var(--line2);
+    flex-shrink: 0;
   }
 </style>
 </head>
@@ -340,14 +309,8 @@
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-left">
-    <div>
-      <div class="topbar-tag">Equity Compensation</div>
-      <h1>ESOP <span>Exit</span> Calculator</h1>
-    </div>
-  </div>
-  <div class="topbar-right">
-    All vesting assumed · 1 USD = ₹84<br>
-    Exercise Price = 25% of Grant · Tax = 30%
+    <div class="topbar-tag">Equity Compensation</div>
+    <h1>ESOP <span>Exit</span> Calculator</h1>
   </div>
 </div>
 
@@ -359,7 +322,7 @@
 
     <div>
       <div class="sec-label">Existing ESOP</div>
-      <div class="input-row" style="margin-bottom:10px;">
+      <div class="input-row">
         <label>Number of Shares</label>
         <input type="number" id="numShares" value="100000" min="0" oninput="calc()">
       </div>
@@ -369,7 +332,7 @@
       </div>
       <div class="computed-row">
         <span class="cl">Grant Value</span>
-        <span class="cv amber" id="grantVal">—</span>
+        <span class="cv cyan" id="grantVal">—</span>
       </div>
       <div class="computed-row">
         <span class="cl">Exercise Price (25%)</span>
@@ -382,7 +345,7 @@
       <div class="cards">
         <div class="card">
           <div class="cl">Shares Value</div>
-          <div class="cv amber" id="c-sv">—</div>
+          <div class="cv cyan" id="c-sv">—</div>
           <div class="cs" id="c-sv-sub">—</div>
         </div>
         <div class="card">
@@ -414,13 +377,10 @@
   <div class="right-panel">
 
     <div class="matrix-header">
-      <div>
-        <div class="mh-title">Scenario Matrix — Net Cash in Hand</div>
-        <div class="mh-note">Cashless · EP = 25% of Grant · Tax = 30%</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
-        <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;">CURRENT VALUATION ($M)</div>
-        <input type="number" id="currentVal" value="64" min="1" style="width:90px;font-size:13px;padding:6px 10px;" oninput="calc()">
+      <div class="matrix-title">Scenario Matrix — Net Cash in Hand</div>
+      <div class="cur-val-wrap">
+        <label>Current Valuation ($M)</label>
+        <input type="number" id="currentVal" value="64" min="1" oninput="calc()">
       </div>
     </div>
 
@@ -439,9 +399,16 @@
       <tbody id="matrixBody"></tbody>
     </table>
 
-    <div class="footnote">
-      * Highlighted row = current company valuation. All options assumed fully vested.<br>
-      Shares Value = ownership % × exit valuation. Ownership % derived from current valuation ÷ $2.84/share.
+    <div class="notes">
+      <div class="notes-title">Notes</div>
+      <ul>
+        <li>All options assumed fully vested at exit — no partial vesting applied</li>
+        <li>Exercise Price = 25% of Grant Value (cashless settlement assumed)</li>
+        <li>Tax = 30% flat on Gross Gain (perquisite income basis)</li>
+        <li>1 USD = ₹95 · Share Price = $2.84 (current) · Grant Value = Shares × $2.84</li>
+        <li>Shares Value at Exit = Ownership % × Exit Valuation · Ownership % = Your Shares ÷ Total Implied Shares at Current Valuation</li>
+        <li>Highlighted row = current company valuation · Click any row to update results panel</li>
+      </ul>
     </div>
 
   </div>
@@ -449,107 +416,113 @@
 
 <script>
   const SHARE_PRICE = 2.84;
-  const USD_INR    = 84;
-  const EP_PCT     = 0.25;
-  const TAX_RATE   = 0.30;
+  const USD_INR     = 95;
+  const EP_PCT      = 0.25;
+  const TAX_RATE    = 0.30;
+
+  const FIXED_SCENARIOS = [100, 125, 150, 200, 250, 300, 400, 500];
 
   function usdToInr(usd) {
     const inr = usd * USD_INR;
-    if (Math.abs(inr) >= 1e7) return '₹' + (inr/1e7).toFixed(2) + 'Cr';
-    if (Math.abs(inr) >= 1e5) return '₹' + (inr/1e5).toFixed(2) + 'L';
-    return '₹' + Math.round(inr).toLocaleString('en-IN');
+    const abs = Math.abs(inr);
+    const sign = inr < 0 ? '-' : '';
+    if (abs >= 1e7) return sign + '₹' + (abs/1e7).toFixed(2) + 'Cr';
+    if (abs >= 1e5) return sign + '₹' + (abs/1e5).toFixed(2) + 'L';
+    return sign + '₹' + Math.round(abs).toLocaleString('en-IN');
   }
 
   function fmtUSD(usd) {
-    if (Math.abs(usd) >= 1e6) return '$' + (usd/1e6).toFixed(2) + 'M';
-    if (Math.abs(usd) >= 1e3) return '$' + (usd/1e3).toFixed(0) + 'K';
-    return '$' + Math.round(usd);
+    const abs = Math.abs(usd);
+    const sign = usd < 0 ? '-' : '';
+    if (abs >= 1e6) return sign + '$' + (abs/1e6).toFixed(2) + 'M';
+    if (abs >= 1e3) return sign + '$' + (abs/1e3).toFixed(0) + 'K';
+    return sign + '$' + Math.round(abs);
   }
 
   function compute(shares, currentValM, exitValM) {
-    const grantVal = shares * SHARE_PRICE;
-    const ep       = grantVal * EP_PCT;
+    const grantVal    = shares * SHARE_PRICE;
+    const ep          = grantVal * EP_PCT;
     const totalShares = (currentValM * 1e6) / SHARE_PRICE;
-    const ownerPct = shares / totalShares;
-    const sv       = ownerPct * exitValM * 1e6;
-    const gross    = sv - ep;
-    const tax      = gross > 0 ? gross * TAX_RATE : 0;
-    const net      = gross - tax;
-    const multiple = grantVal > 0 ? net / grantVal : 0;
+    const ownerPct    = shares / totalShares;
+    const sv          = ownerPct * exitValM * 1e6;
+    const gross       = sv - ep;
+    const tax         = gross > 0 ? gross * TAX_RATE : 0;
+    const net         = gross - tax;
+    const multiple    = grantVal > 0 ? net / grantVal : 0;
     return { grantVal, ep, sv, gross, tax, net, multiple, ownerPct };
   }
 
   function getScenarios(currentValM) {
-    // Fixed set but replace/add $64M (Current) row dynamically
-    const fixed = [100, 125, 150, 200, 250, 300, 400, 500];
-    const all = [{ val: currentValM, label: '$' + currentValM + 'M (Current)', isCurrent: true }];
-    fixed.forEach(v => {
-      if (v !== currentValM) all.push({ val: v, label: '$' + v + 'M', isCurrent: false });
+    const rows = [{ val: currentValM, label: '$' + currentValM + 'M (Current)', isCurrent: true }];
+    FIXED_SCENARIOS.forEach(v => {
+      if (Math.round(v) !== Math.round(currentValM))
+        rows.push({ val: v, label: '$' + v + 'M', isCurrent: false });
     });
-    all.sort((a,b) => a.val - b.val);
-    return all;
+    rows.sort((a, b) => a.val - b.val);
+    return rows;
   }
 
   function calc() {
-    const shares     = parseInt(document.getElementById('numShares').value)  || 0;
-    const currentValM = parseFloat(document.getElementById('currentVal').value) || 64;
+    const shares      = parseInt(document.getElementById('numShares').value)     || 0;
+    const currentValM = parseFloat(document.getElementById('currentVal').value)  || 64;
 
+    // Left panel computed
     const grantVal = shares * SHARE_PRICE;
     const ep       = grantVal * EP_PCT;
-
     document.getElementById('grantVal').textContent = fmtUSD(grantVal) + '  (' + usdToInr(grantVal) + ')';
     document.getElementById('epVal').textContent    = fmtUSD(ep)       + '  (' + usdToInr(ep)       + ')';
 
-    // Cards — show at current valuation by default
-    const rc = compute(shares, currentValM, currentValM);
-    setCard(rc, currentValM);
+    // Default result cards = current valuation
+    const rDefault = compute(shares, currentValM, currentValM);
+    updateCards(rDefault, currentValM);
 
     // Matrix
     const tbody = document.getElementById('matrixBody');
     tbody.innerHTML = '';
-    getScenarios(currentValM).forEach(scenario => {
-      const r = compute(shares, currentValM, scenario.val);
+    getScenarios(currentValM).forEach(s => {
+      const r  = compute(shares, currentValM, s.val);
       const tr = document.createElement('tr');
-      if (scenario.isCurrent) tr.className = 'current-row';
+      if (s.isCurrent) tr.className = 'current-row';
 
-      const grossStr = r.gross >= 0
-        ? '<span class="t-pos">' + usdToInr(r.gross) + '</span>'
-        : '<span class="t-neg">-' + usdToInr(Math.abs(r.gross)) + '</span>';
+      const grossHtml = r.gross >= 0
+        ? '<span class="t-pos">'  + usdToInr(r.gross)        + '</span>'
+        : '<span class="t-neg">'  + usdToInr(r.gross)        + '</span>';
 
-      const netStr = r.net >= 0
-        ? '<span class="t-net">' + usdToInr(r.net) + '</span>'
-        : '<span class="t-neg">-' + usdToInr(Math.abs(r.net)) + '</span>';
+      const netHtml = r.net >= 0
+        ? '<span class="t-net">'      + usdToInr(r.net)  + '</span>'
+        : '<span class="t-neg">'      + usdToInr(r.net)  + '</span>';
 
-      const multStr = '<span class="' + (r.multiple >= 1 ? 't-pos' : 't-neg') + '">' + r.multiple.toFixed(2) + 'x</span>';
+      const multHtml = '<span class="' + (r.multiple >= 1 ? 't-mult-pos' : 't-mult-neg') + '">'
+                     + r.multiple.toFixed(2) + 'x</span>';
 
       tr.innerHTML = `
-        <td>${scenario.label}</td>
+        <td>${s.label}</td>
         <td>${usdToInr(r.sv)}</td>
-        <td class="t-neg">-${usdToInr(r.ep)}</td>
-        <td>${grossStr}</td>
-        <td class="t-neg">-${usdToInr(r.tax)}</td>
-        <td>${netStr}</td>
-        <td>${multStr}</td>
+        <td class="t-neg">${usdToInr(-r.ep)}</td>
+        <td>${grossHtml}</td>
+        <td class="t-neg">${usdToInr(-r.tax)}</td>
+        <td>${netHtml}</td>
+        <td>${multHtml}</td>
       `;
-
-      tr.addEventListener('click', () => setCard(r, scenario.val));
+      tr.addEventListener('click', () => updateCards(r, s.val));
       tbody.appendChild(tr);
     });
   }
 
-  function setCard(r, exitValM) {
-    document.getElementById('c-sv').textContent    = usdToInr(r.sv);
+  function updateCards(r, exitValM) {
+    document.getElementById('c-sv').textContent     = usdToInr(r.sv);
     document.getElementById('c-sv-sub').textContent = fmtUSD(r.sv) + ' · ' + (r.ownerPct*100).toFixed(2) + '% ownership';
-    document.getElementById('c-ep').textContent    = '-' + usdToInr(r.ep);
-    document.getElementById('c-gg').textContent    = (r.gross >= 0 ? '' : '-') + usdToInr(Math.abs(r.gross));
+    document.getElementById('c-ep').textContent     = usdToInr(-r.ep);
+    document.getElementById('c-gg').textContent     = usdToInr(r.gross);
     document.getElementById('c-gg-sub').textContent = fmtUSD(r.gross);
-    document.getElementById('c-tax').textContent   = '-' + usdToInr(r.tax);
-    document.getElementById('c-net').textContent   = (r.net >= 0 ? '' : '-') + usdToInr(Math.abs(r.net));
-    document.getElementById('c-mult').textContent  = 'Multiple on grant: ' + r.multiple.toFixed(2) + 'x  ·  Exit @ $' + exitValM + 'M';
+    document.getElementById('c-tax').textContent    = usdToInr(-r.tax);
 
-    // colour net card
     const netEl = document.getElementById('c-net');
-    netEl.className = 'cv ' + (r.net >= 1 ? 'green' : 'red');
+    netEl.textContent   = usdToInr(r.net);
+    netEl.className     = 'cv ' + (r.net >= 0 ? 'green' : 'red');
+
+    document.getElementById('c-mult').textContent =
+      'Multiple on grant: ' + r.multiple.toFixed(2) + 'x  ·  Exit @ $' + exitValM + 'M';
   }
 
   calc();
