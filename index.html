@@ -11,18 +11,19 @@
     --panel:   #0b0e1a;
     --panel2:  #101528;
     --panel3:  #161c33;
-    --line:    #1e2540;
-    --line2:   #28304e;
+    --line:    #2a3354;
+    --line2:   #36406a;
 
     --cyan:    #38d9f5;
     --yellow:  #f5d038;
     --green:   #5edb8e;
     --orange:  #f5822a;
-    --red:     #f54a4a;
-    --blue:    #5b8af5;
-    --muted:   #3d4d6e;
-    --text:    #8a9bbf;
+    --red:     #f56060;
+    --blue:    #7aa4f5;
+    --muted:   #7a8fb8;   /* was 3d4d6e — much brighter */
+    --text:    #b8c8e8;   /* was 8a9bbf — brighter */
     --white:   #dce8ff;
+    --label:   #94a8d0;   /* new — for section labels & table headers */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,21 +48,15 @@
     padding: 12px 28px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-shrink: 0;
-  }
-
-  .topbar-left {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
   }
 
   .topbar-tag {
     font-size: 8px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--label);
+    margin-bottom: 2px;
   }
 
   .topbar h1 {
@@ -86,10 +81,10 @@
   .left-panel {
     background: var(--panel);
     border-right: 1px solid var(--line2);
-    padding: 20px 18px;
+    padding: 22px 18px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 8px;
     overflow-y: auto;
   }
 
@@ -97,7 +92,7 @@
     font-size: 8px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--label);
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -108,10 +103,10 @@
   .input-row { margin-bottom: 10px; }
   .input-row label {
     display: block;
-    font-size: 8px;
+    font-size: 9px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--label);
     margin-bottom: 5px;
   }
 
@@ -138,49 +133,32 @@
     justify-content: space-between;
     background: var(--panel2);
     border: 1px solid var(--line);
-    padding: 8px 12px;
-    margin-bottom: 5px;
+    padding: 9px 12px;
+    margin-bottom: 6px;
   }
   .computed-row .cl {
-    font-size: 8px;
+    font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--label);
   }
   .computed-row .cv         { font-size: 12px; font-weight: 500; }
   .computed-row .cv.dim     { color: var(--muted); font-size: 11px; }
   .computed-row .cv.cyan    { color: var(--cyan); }
   .computed-row .cv.red     { color: var(--red); }
 
-  /* Cards */
-  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-
-  .card {
-    background: var(--panel2);
-    border: 1px solid var(--line);
-    padding: 11px 13px;
+  /* current val inside left panel */
+  .cur-input-row {
+    margin-top: 10px;
   }
-  .card.full { grid-column: 1/-1; }
-
-  .card .cl {
-    font-size: 7px;
+  .cur-input-row label {
+    display: block;
+    font-size: 9px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
+    color: var(--label);
+    margin-bottom: 5px;
   }
-  .card .cv {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.45rem;
-    letter-spacing: 0.04em;
-    line-height: 1.1;
-  }
-  .card .cv.cyan   { color: var(--cyan); }
-  .card .cv.yellow { color: var(--yellow); }
-  .card .cv.green  { color: var(--green); }
-  .card .cv.red    { color: var(--red); }
-  .card .cv.orange { color: var(--orange); }
-  .card .cs { font-size: 8px; color: var(--muted); margin-top: 2px; }
 
   /* ── RIGHT PANEL ── */
   .right-panel {
@@ -191,9 +169,6 @@
   }
 
   .matrix-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: 14px;
   }
 
@@ -201,30 +176,12 @@
     font-size: 8px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--label);
     display: flex;
     align-items: center;
     gap: 8px;
   }
   .matrix-title::after { content:''; width:40px; height:1px; background:var(--line2); }
-
-  /* current val input in header */
-  .cur-val-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .cur-val-wrap label {
-    font-size: 8px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .cur-val-wrap input[type="number"] {
-    width: 88px;
-    font-size: 13px;
-    padding: 6px 10px;
-  }
 
   /* Table */
   table {
@@ -234,11 +191,11 @@
   }
 
   thead th {
-    font-size: 7px;
+    font-size: 8px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--muted);
-    padding: 6px 10px;
+    color: var(--label);
+    padding: 7px 10px;
     text-align: right;
     border-bottom: 1px solid var(--line2);
     white-space: nowrap;
@@ -246,27 +203,26 @@
   thead th:first-child { text-align: left; }
 
   tbody td {
-    padding: 9px 10px;
+    padding: 10px 10px;
     text-align: right;
-    border-bottom: 1px solid rgba(30,37,64,0.8);
+    border-bottom: 1px solid rgba(42,51,84,0.7);
     color: var(--text);
     font-size: 12px;
   }
   tbody td:first-child { text-align: left; color: var(--muted); font-size: 11px; }
 
-  tbody tr.current-row { background: rgba(56,217,245,0.05); }
+  tbody tr.current-row { background: rgba(56,217,245,0.06); }
   tbody tr.current-row td:first-child { color: var(--cyan); font-weight: 600; }
-  tbody tr:hover td { background: rgba(255,255,255,0.02); cursor: pointer; }
+  tbody tr:hover td { background: rgba(255,255,255,0.025); cursor: pointer; }
 
-  .t-neg  { color: var(--red)    !important; }
-  .t-pos  { color: var(--green)  !important; }
-  .t-net  { color: var(--cyan)   !important; font-weight: 600; }
+  .t-neg      { color: var(--red)    !important; }
+  .t-pos      { color: var(--green)  !important; }
+  .t-net      { color: var(--cyan)   !important; font-weight: 600; }
   .t-mult-pos { color: var(--yellow) !important; }
   .t-mult-neg { color: var(--red)    !important; }
 
   /* Notes */
   .notes {
-    margin-top: auto;
     padding-top: 16px;
     border-top: 1px solid var(--line);
     margin-top: 18px;
@@ -276,8 +232,8 @@
     font-size: 8px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
+    color: var(--label);
+    margin-bottom: 10px;
   }
 
   .notes ul {
@@ -285,21 +241,21 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
   }
 
   .notes ul li {
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    line-height: 1.5;
+    font-size: 10px;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    line-height: 1.6;
     display: flex;
     gap: 8px;
   }
 
   .notes ul li::before {
     content: '•';
-    color: var(--line2);
+    color: var(--muted);
     flex-shrink: 0;
   }
 </style>
@@ -308,7 +264,7 @@
 
 <!-- TOP BAR -->
 <div class="topbar">
-  <div class="topbar-left">
+  <div>
     <div class="topbar-tag">Equity Compensation</div>
     <h1>ESOP <span>Exit</span> Calculator</h1>
   </div>
@@ -320,55 +276,29 @@
   <!-- LEFT -->
   <div class="left-panel">
 
-    <div>
-      <div class="sec-label">Existing ESOP</div>
-      <div class="input-row">
-        <label>Number of Shares</label>
-        <input type="number" id="numShares" value="100000" min="0" oninput="calc()">
-      </div>
-      <div class="computed-row">
-        <span class="cl">Share Price (Current)</span>
-        <span class="cv dim">$2.84 / share</span>
-      </div>
-      <div class="computed-row">
-        <span class="cl">Grant Value</span>
-        <span class="cv cyan" id="grantVal">—</span>
-      </div>
-      <div class="computed-row">
-        <span class="cl">Exercise Price (25%)</span>
-        <span class="cv red" id="epVal">—</span>
-      </div>
+    <div class="sec-label">Existing ESOP</div>
+
+    <div class="input-row">
+      <label>Number of Shares</label>
+      <input type="number" id="numShares" value="100000" min="0" oninput="calc()">
     </div>
 
-    <div>
-      <div class="sec-label">Results at Selected Exit</div>
-      <div class="cards">
-        <div class="card">
-          <div class="cl">Shares Value</div>
-          <div class="cv cyan" id="c-sv">—</div>
-          <div class="cs" id="c-sv-sub">—</div>
-        </div>
-        <div class="card">
-          <div class="cl">Exercise Cost</div>
-          <div class="cv red" id="c-ep">—</div>
-          <div class="cs">25% of grant</div>
-        </div>
-        <div class="card">
-          <div class="cl">Gross Gain</div>
-          <div class="cv orange" id="c-gg">—</div>
-          <div class="cs" id="c-gg-sub">—</div>
-        </div>
-        <div class="card">
-          <div class="cl">Tax (30%)</div>
-          <div class="cv red" id="c-tax">—</div>
-          <div class="cs">on gross gain</div>
-        </div>
-        <div class="card full">
-          <div class="cl">Net Cash in Hand</div>
-          <div class="cv green" id="c-net">—</div>
-          <div class="cs" id="c-mult">—</div>
-        </div>
-      </div>
+    <div class="computed-row">
+      <span class="cl">Share Price (Current)</span>
+      <span class="cv dim">$2.84 / share</span>
+    </div>
+    <div class="computed-row">
+      <span class="cl">Grant Value</span>
+      <span class="cv cyan" id="grantVal">—</span>
+    </div>
+    <div class="computed-row">
+      <span class="cl">Exercise Price (25%)</span>
+      <span class="cv red" id="epVal">—</span>
+    </div>
+
+    <div class="cur-input-row">
+      <label>Current Company Valuation ($M)</label>
+      <input type="number" id="currentVal" value="64" min="1" oninput="calc()">
     </div>
 
   </div>
@@ -378,10 +308,6 @@
 
     <div class="matrix-header">
       <div class="matrix-title">Scenario Matrix — Net Cash in Hand</div>
-      <div class="cur-val-wrap">
-        <label>Current Valuation ($M)</label>
-        <input type="number" id="currentVal" value="64" min="1" oninput="calc()">
-      </div>
     </div>
 
     <table>
@@ -407,7 +333,7 @@
         <li>Tax = 30% flat on Gross Gain (perquisite income basis)</li>
         <li>1 USD = ₹95 · Share Price = $2.84 (current) · Grant Value = Shares × $2.84</li>
         <li>Shares Value at Exit = Ownership % × Exit Valuation · Ownership % = Your Shares ÷ Total Implied Shares at Current Valuation</li>
-        <li>Highlighted row = current company valuation · Click any row to update results panel</li>
+        <li>Highlighted row = current company valuation</li>
       </ul>
     </div>
 
@@ -419,7 +345,6 @@
   const USD_INR     = 95;
   const EP_PCT      = 0.25;
   const TAX_RATE    = 0.30;
-
   const FIXED_SCENARIOS = [100, 125, 150, 200, 250, 300, 400, 500];
 
   function usdToInr(usd) {
@@ -463,34 +388,29 @@
   }
 
   function calc() {
-    const shares      = parseInt(document.getElementById('numShares').value)     || 0;
-    const currentValM = parseFloat(document.getElementById('currentVal').value)  || 64;
+    const shares       = parseInt(document.getElementById('numShares').value)    || 0;
+    const currentValM  = parseFloat(document.getElementById('currentVal').value) || 64;
 
-    // Left panel computed
     const grantVal = shares * SHARE_PRICE;
     const ep       = grantVal * EP_PCT;
     document.getElementById('grantVal').textContent = fmtUSD(grantVal) + '  (' + usdToInr(grantVal) + ')';
     document.getElementById('epVal').textContent    = fmtUSD(ep)       + '  (' + usdToInr(ep)       + ')';
 
-    // Default result cards = current valuation
-    const rDefault = compute(shares, currentValM, currentValM);
-    updateCards(rDefault, currentValM);
-
-    // Matrix
     const tbody = document.getElementById('matrixBody');
     tbody.innerHTML = '';
+
     getScenarios(currentValM).forEach(s => {
       const r  = compute(shares, currentValM, s.val);
       const tr = document.createElement('tr');
       if (s.isCurrent) tr.className = 'current-row';
 
       const grossHtml = r.gross >= 0
-        ? '<span class="t-pos">'  + usdToInr(r.gross)        + '</span>'
-        : '<span class="t-neg">'  + usdToInr(r.gross)        + '</span>';
+        ? '<span class="t-pos">' + usdToInr(r.gross) + '</span>'
+        : '<span class="t-neg">' + usdToInr(r.gross) + '</span>';
 
       const netHtml = r.net >= 0
-        ? '<span class="t-net">'      + usdToInr(r.net)  + '</span>'
-        : '<span class="t-neg">'      + usdToInr(r.net)  + '</span>';
+        ? '<span class="t-net">'  + usdToInr(r.net) + '</span>'
+        : '<span class="t-neg">'  + usdToInr(r.net) + '</span>';
 
       const multHtml = '<span class="' + (r.multiple >= 1 ? 't-mult-pos' : 't-mult-neg') + '">'
                      + r.multiple.toFixed(2) + 'x</span>';
@@ -504,25 +424,8 @@
         <td>${netHtml}</td>
         <td>${multHtml}</td>
       `;
-      tr.addEventListener('click', () => updateCards(r, s.val));
       tbody.appendChild(tr);
     });
-  }
-
-  function updateCards(r, exitValM) {
-    document.getElementById('c-sv').textContent     = usdToInr(r.sv);
-    document.getElementById('c-sv-sub').textContent = fmtUSD(r.sv) + ' · ' + (r.ownerPct*100).toFixed(2) + '% ownership';
-    document.getElementById('c-ep').textContent     = usdToInr(-r.ep);
-    document.getElementById('c-gg').textContent     = usdToInr(r.gross);
-    document.getElementById('c-gg-sub').textContent = fmtUSD(r.gross);
-    document.getElementById('c-tax').textContent    = usdToInr(-r.tax);
-
-    const netEl = document.getElementById('c-net');
-    netEl.textContent   = usdToInr(r.net);
-    netEl.className     = 'cv ' + (r.net >= 0 ? 'green' : 'red');
-
-    document.getElementById('c-mult').textContent =
-      'Multiple on grant: ' + r.multiple.toFixed(2) + 'x  ·  Exit @ $' + exitValM + 'M';
   }
 
   calc();
