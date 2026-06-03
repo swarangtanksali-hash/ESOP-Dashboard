@@ -18,8 +18,8 @@
     --green:   #5edb8e;
     --orange:  #f5822a;
     --red:     #f56060;
-    --muted:   #7a8fb8;
-    --text:    #b8c8e8;
+    --muted:   #8fa3cc;
+    --text:    #c8d8f0;
     --label:   #94a8d0;
     --dimmed:  #3d4d6e;   /* greyed out — for current val label */
     --white:   #dce8ff;
@@ -246,7 +246,7 @@
   }
 
   .notes ul li {
-    font-size: 10.5px;
+    font-size: 11px;
     color: var(--text);
     letter-spacing: 0.04em;
     line-height: 1.6;
@@ -288,7 +288,7 @@
       <span class="cv cyan" id="grantVal">—</span>
     </div>
     <div class="computed-row">
-      <span class="cl">Exercise Price (25%)</span>
+      <span class="cl">Exercise Price (23.24%)</span>
       <span class="cv red" id="epVal">—</span>
     </div>
 
@@ -325,8 +325,8 @@
       <div class="notes-title">Notes</div>
       <ul>
         <li>All options assumed fully vested at exit — no partial vesting applied</li>
-        <li>Exercise Price = 25% of Grant Value (cashless settlement assumed)</li>
-        <li>Tax = 30% flat on Net Gain (perquisite income basis)</li>
+        <li>Exercise Price = 23.24% of Grant Value ($0.66 409A FMV ÷ $2.84 Series A share price)</li>
+        <li>Tax = 30% flat on Net Gain (perquisite income basis — exercise spread taxed as salary income)</li>
         <li>1 USD = ₹95 · Share Price = $2.84 (current) · Grant Value = Shares × $2.84</li>
         <li>Shares Value at Exit = Ownership % × Exit Valuation · Ownership % = Your Shares ÷ Total Implied Shares at Current Valuation</li>
         <li>Highlighted row = current company valuation</li>
@@ -339,7 +339,7 @@
 <script>
   const SHARE_PRICE = 2.84;
   const USD_INR     = 95;
-  const EP_PCT      = 0.25;
+  const EP_PCT      = 0.2324;
   const TAX_RATE    = 0.30;
   const FIXED_SCENARIOS = [100, 125, 150, 200, 250, 300, 400, 500];
 
